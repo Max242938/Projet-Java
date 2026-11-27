@@ -14,5 +14,5 @@ public class ThermometerDevice extends Device {
     public void setTemperatureThreshold(double threshold) { setParameter1(threshold); }
     public double getCurrentTemperature() { return getMeasurement1(); }
     public void setCurrentTemperature(double temperature) { setMeasurement1(temperature); }
-    @Override public void accept(DeviceVisitor visitor) { visitor.visitThermometer(this); }
+    @Override public void accept(DeviceVisitor v) { v.visit(this); }
 }

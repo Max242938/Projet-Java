@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlarmObserver implements EventObserver {
     private static final Logger log = LoggerFactory.getLogger(AlarmObserver.class);
-    @Override 
-    public String getName() { return "alarm"; }
-    @Override 
-    public void onEvent(DeviceEvent event) {
+    @Override public void update(DeviceEvent event) {
         if (event.getEventType() == EventType.INTRUSION_DETECTED || event.getEventType() == EventType.TEMPERATURE_ABNORMAL) {
             String text = "[ALARME] ALERTE DECLENCHEE : appareil=" + event.getDeviceId() + ", type=" + event.getEventType() + ", valeur=" + event.getValue();
             log.warn(text);

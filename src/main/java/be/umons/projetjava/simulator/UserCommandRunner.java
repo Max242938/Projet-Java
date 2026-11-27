@@ -26,8 +26,7 @@ public class UserCommandRunner implements CommandLineRunner {
         this.visitorManager = visitorManager;
         this.context = context;
     }
-    @Override 
-    public void run(String... args) { new Thread(this::runInteractiveMenu, "smarthome-console").start(); }
+    @Override public void run(String... args) { new Thread(this::runInteractiveMenu, "smarthome-console").start(); }
     private void runInteractiveMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
@@ -92,7 +91,7 @@ public class UserCommandRunner implements CommandLineRunner {
         System.out.print("Action (attach / detach / retour) : ");
         String action = scanner.nextLine().trim().toLowerCase();
         if ("retour".equals(action) || action.isEmpty()) return;
-        System.out.print("Nom de l'observateur (email / alarm / log) : ");
+        System.out.print("Nom de l'observateur (ex: email, alarm, log ou emailObserver) : ");
         String name = scanner.nextLine().trim();
         if ("attach".equals(action)) System.out.println(observerManager.attach(name) ? "Observateur attache." : "Observateur inconnu.");
         else if ("detach".equals(action)) System.out.println(observerManager.detach(name) ? "Observateur detache." : "Observateur introuvable ou deja detache.");
@@ -101,7 +100,7 @@ public class UserCommandRunner implements CommandLineRunner {
     }
     private void runVisitorMenu(Scanner scanner) {
         System.out.println("\nVisiteurs disponibles : " + visitorManager.getAvailableVisitorNames());
-        System.out.print("Nom du visiteur (status / report) : ");
+        System.out.print("Nom du visiteur (status / report ou nom du Bean) : ");
         String visitorName = scanner.nextLine().trim();
         System.out.print("ID d'un appareil precis (ou Entree pour tous les appareils) : ");
         String idInput = scanner.nextLine().trim();

@@ -7,12 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailObserver implements EventObserver {
     private static final Logger log = LoggerFactory.getLogger(EmailObserver.class);
-    @Override 
-    public String getName() { return "email"; }
-    @Override 
-    public void onEvent(DeviceEvent event) {
+    @Override public void update(DeviceEvent event) {
         if (event.getEventType() == EventType.INTRUSION_DETECTED || event.getEventType() == EventType.TEMPERATURE_ABNORMAL) {
-            String text = "[EMAIL] Notification urgente envoyee : appareil=" + event.getDeviceId() + ", type=" + event.getEventType() + ", valeur=" + event.getValue() + ", message=" + event.getMessage();
+            String text = "[EMAIL] Notification urgente : appareil=" + event.getDeviceId() + ", type=" + event.getEventType() + ", valeur=" + event.getValue() + ", message=" + event.getMessage();
             log.info(text);
             System.out.println(text);
         }

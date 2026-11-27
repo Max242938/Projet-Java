@@ -14,7 +14,6 @@ public class EventReportVisitor implements DeviceVisitor {
     private Map<Long, Integer> countByDevice = new LinkedHashMap<>();
     private double tempSum = 0.0, tempMin = 0.0, tempMax = 0.0, maxMotionValue = 0.0;
     public EventReportVisitor() { reset(); }
-    @Override public String getName() { return "report"; }
     @Override public String getTitle() { return "Rapport statistique des evenements"; }
     @Override public void reset() {
         deviceNames = new LinkedHashMap<>();
@@ -25,13 +24,13 @@ public class EventReportVisitor implements DeviceVisitor {
         countByDevice = new LinkedHashMap<>();
         tempSum = 0.0; tempMin = 0.0; tempMax = 0.0; maxMotionValue = 0.0;
     }
-    @Override public void visitCamera(CameraDevice camera) {
+    @Override public void visit(CameraDevice camera) {
         if (camera.getId() != null) deviceNames.put(camera.getId(), camera.getName());
     }
-    @Override public void visitThermometer(ThermometerDevice thermometer) {
+    @Override public void visit(ThermometerDevice thermometer) {
         if (thermometer.getId() != null) deviceNames.put(thermometer.getId(), thermometer.getName());
     }
-    @Override public void visitEvent(DeviceEvent event) {
+    @Override public void visit(DeviceEvent event) {
         totalEvents++;
         LocalDateTime ts = event.getTimestamp();
         if (ts != null) {

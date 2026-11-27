@@ -14,5 +14,5 @@ public class CameraDevice extends Device {
     public void setSensitivity(double sensitivity) { setParameter1(sensitivity); }
     public double getMotionLevel() { return getMeasurement1(); }
     public void setMotionLevel(double motionLevel) { setMeasurement1(motionLevel); }
-    @Override public void accept(DeviceVisitor visitor) { visitor.visitCamera(this); }
+    @Override public void accept(DeviceVisitor v) { v.visit(this); }
 }

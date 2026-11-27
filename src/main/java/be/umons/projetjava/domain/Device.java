@@ -1,12 +1,13 @@
 package be.umons.projetjava.domain;
 import be.umons.projetjava.visitor.DeviceVisitor;
+import be.umons.projetjava.visitor.Element;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 @Entity
 @Table(name = "devices")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-public abstract class Device {
+public abstract class Device implements Element {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
     private String name;
     @Enumerated(EnumType.STRING) private DeviceType deviceType;
@@ -23,7 +24,7 @@ public abstract class Device {
         this.parameter1 = parameter1;
         this.measurement1 = measurement1;
     }
-    public abstract void accept(DeviceVisitor visitor);
+    @Override public abstract void accept(DeviceVisitor v);
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }

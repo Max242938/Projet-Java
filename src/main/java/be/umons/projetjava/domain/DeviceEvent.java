@@ -1,10 +1,11 @@
 package be.umons.projetjava.domain;
 import be.umons.projetjava.visitor.DeviceVisitor;
+import be.umons.projetjava.visitor.Element;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "device_events")
-public class DeviceEvent {
+public class DeviceEvent implements Element {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
     @Enumerated(EnumType.STRING) private EventType eventType;
     private LocalDateTime timestamp;
@@ -19,7 +20,7 @@ public class DeviceEvent {
         this.value = value;
         this.message = message;
     }
-    public void accept(DeviceVisitor visitor) { visitor.visitEvent(this); }
+    @Override public void accept(DeviceVisitor v) { v.visit(this); }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public EventType getEventType() { return eventType; }

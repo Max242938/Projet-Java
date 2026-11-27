@@ -3,36 +3,53 @@ import be.umons.projetjava.domain.DeviceEvent;
 import java.util.*;
 import org.springframework.stereotype.Service;
 @Service
-public class ObserverManager {
-    private final Map<String, EventObserver> availableObservers = new LinkedHashMap<>();
-    private final List<EventObserver> activeObservers = new ArrayList<>();
-    public ObserverManager(List<EventObserver> observers) {
-        for (EventObserver observer : observers) {
-            availableObservers.put(observer.getName().toLowerCase(), observer);
-            activeObservers.add(observer);
+public class ObserverManager extends Subject {
+    private final Map<String, EventObserver> availableObservers; // injecte automatiquement par Spring (cle = nom du Bean)
+    private final List<String> observersEnabled = new ArrayList<>();
+    public ObserverManager(Map<String, EventObserver> availableObservers) {
+        this.availableObservers = availableObservers;
+        for (String beanName : availableObservers.keySet()) enableObserver(beanName); // tous actifs au demarrage
+    }
+    private String resolveBeanName(String name) {
+        if (name == null) return null;
+        String trimmed = name.trim();
+        if (availableObservers.containsKey(trimmed)) return trimmed;
+        for (String key : availableObservers.keySet()) {
+            if (key.equalsIgnoreCase(trimmed) || key.equalsIgnoreCase(trimmed + "Observer")) return key;
         }
+        return null;
+    }
+    public void enableObserver(String name) {
+        String beanName = resolveBeanName(name);
+        if (beanName == null) throw new IllegalArgumentException("Unknown observer: " + name);
+        addObserver(availableObservers.get(beanName));
+        if (!observersEnabled.contains(beanName)) observersEnabled.add(beanName);
+    }
+    public void disableObserver(String name) {
+        String beanName = resolveBeanName(name);
+        if (beanName == null) throw new IllegalArgumentException("Unknown observer: " + name);
+        removeObserver(availableObservers.get(beanName));
+        observersEnabled.remove(beanName);
     }
     public boolean attach(String name) {
-        EventObserver observer = (name == null) ? null : availableObservers.get(name.trim().toLowerCase());
-        if (observer == null) return false;
-        if (!activeObservers.contains(observer)) activeObservers.add(observer);
+        if (resolveBeanName(name) == null) return false;
+        enableObserver(name);
         return true;
     }
     public boolean detach(String name) {
-        EventObserver observer = (name == null) ? null : availableObservers.get(name.trim().toLowerCase());
-        return observer != null && activeObservers.remove(observer);
+        String beanName = resolveBeanName(name);
+        if (beanName == null || !observersEnabled.contains(beanName)) return false;
+        disableObserver(name);
+        return true;
     }
     public boolean isAttached(String name) {
-        EventObserver observer = (name == null) ? null : availableObservers.get(name.trim().toLowerCase());
-        return observer != null && activeObservers.contains(observer);
+        String beanName = resolveBeanName(name);
+        return beanName != null && observersEnabled.contains(beanName);
     }
-    public void notifyAllObservers(DeviceEvent event) {
-        for (EventObserver observer : activeObservers) observer.onEvent(event);
+    @Override public void notifyObservers(DeviceEvent event) {
+        for (EventObserver observer : observers) observer.update(event);
     }
+    public void notifyAll(DeviceEvent event) { notifyObservers(event); }
     public List<String> getAvailableObserverNames() { return new ArrayList<>(availableObservers.keySet()); }
-    public List<String> getActiveObserverNames() {
-        List<String> names = new ArrayList<>();
-        for (EventObserver observer : activeObservers) names.add(observer.getName());
-        return names;
-    }
+    public List<String> getActiveObserverNames() { return new ArrayList<>(observersEnabled); }
 }

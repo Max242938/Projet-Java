@@ -50,7 +50,7 @@ public class DeviceEventService {
         LocalDateTime eventTime = (msg.getTimestamp() != null) ? msg.getTimestamp() : LocalDateTime.now();
         String eventMessage = (msg.getMessage() != null && !msg.getMessage().isBlank()) ? msg.getMessage() : defaultMessage;
         DeviceEvent savedEvent = eventRepository.save(new DeviceEvent(eventType, eventTime, device.getId(), msg.getValue(), eventMessage));
-        observerManager.notifyAllObservers(savedEvent);
+        observerManager.notifyAll(savedEvent);
         return savedEvent;
     }
     public List<DeviceEvent> findAllEvents() { return eventRepository.findAll(); }

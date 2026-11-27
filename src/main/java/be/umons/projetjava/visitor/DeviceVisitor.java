@@ -1,13 +1,10 @@
 package be.umons.projetjava.visitor;
-import be.umons.projetjava.domain.CameraDevice;
-import be.umons.projetjava.domain.DeviceEvent;
-import be.umons.projetjava.domain.ThermometerDevice;
+import be.umons.projetjava.domain.*;
 public interface DeviceVisitor {
-    String getName();
-    String getTitle();
+    void visit(CameraDevice camera);
+    void visit(ThermometerDevice thermometer);
+    void visit(DeviceEvent event);
     void reset();
-    void visitCamera(CameraDevice camera);
-    void visitThermometer(ThermometerDevice thermometer);
-    void visitEvent(DeviceEvent event);
+    String getTitle();
     String getReportText();
 }
