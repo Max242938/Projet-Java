@@ -26,5 +26,5 @@ public class ServiceLoggingAspect {
             log.error("Échec de {}", joinPoint.getSignature(), ex); 
             throw ex; 
         } 
-    } 
+    }
 }
