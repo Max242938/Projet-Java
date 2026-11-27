@@ -1,4 +1,4 @@
-package be.umons;
+package be.umons.projetjava.domain;
 
 import java.io.DataInput;
 import java.text.DateFormat;

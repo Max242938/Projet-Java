@@ -1,4 +1,4 @@
-package be.umons.projetjava;
+package be.umons.projetjava.domain;
 
 public class DeviceEvent {
     Long id;
